@@ -1,4 +1,4 @@
-import React, { useLayoutEffect } from 'react'
+import React, { useEffect, useLayoutEffect } from 'react'
 import { useNavigation, useRoute } from '@react-navigation/native';
 import { urlFor } from '../sanityClient';
 import { 
@@ -12,6 +12,9 @@ import {
 import { View, Image,Text,ScrollView,StatusBar,StyleSheet,TouchableOpacity } from 'react-native';
 
 import DishRow from '../components/DishRow';
+import Basket from '../components/Basket';
+import { useDispatch } from 'react-redux';
+import { setRestaurant } from '../features/restaurantSlice';
 
 export default function RestaurantScreen() {
     const navigation = useNavigation();
@@ -29,6 +32,7 @@ export default function RestaurantScreen() {
             lat
         }
      } = useRoute();
+     const dispatch = useDispatch();
 
      useLayoutEffect(()=>{
         navigation.setOptions({
@@ -36,10 +40,24 @@ export default function RestaurantScreen() {
         })
      },[])
 
-
-
+     useEffect(()=>{
+        dispatch(setRestaurant({
+            id,
+            imgUrl,
+            title,
+            rating,
+            genre,
+            short_description,
+            address,
+            dishes,
+            long,
+            lat
+        }))
+     },[dispatch])
 
   return (
+    <>
+    <Basket />
     <ScrollView style={styles.container}>
         <View className={'relative'}>
             <Image
@@ -96,7 +114,7 @@ export default function RestaurantScreen() {
                 <ChevronRightIcon size={20} color={'gray'} opacity={0.5} />
             </TouchableOpacity>
 
-            <View>
+            <View className="pb-36" >
                 <Text 
                     className={'px-4 pt-6 mb-3 font-bold text-xl'}
                 >Menu
@@ -118,11 +136,14 @@ export default function RestaurantScreen() {
 
         </View>
     </ScrollView>
+    
+    </>
   )
 }
 
 const styles = StyleSheet.create({
     container: {
-        marginTop: StatusBar.currentHeight
+        marginTop: StatusBar.currentHeight,
+        marginBotton: 110
     }
 })

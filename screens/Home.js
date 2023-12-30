@@ -1,8 +1,7 @@
-import { View, Text, Image,TextInput ,ScrollView} from 'react-native'
+import { View, Text, Image,TextInput ,ScrollView,StatusBar,StyleSheet } from 'react-native'
 import React, {  useLayoutEffect,useEffect, useState } from 'react'
 import { useNavigation } from '@react-navigation/native'
-import { SafeAreaView } from 'react-native-safe-area-context';
-// import { SafeAreaView } from 'react-native';
+import { SafeAreaView } from 'react-native';
 
 import {
     ChevronDownIcon,
@@ -44,7 +43,7 @@ export default function Home() {
     },[]);
 
     return (
-        <SafeAreaView className='bg-white pt-5 mb-[100px]' >
+        <View style={styles.container} className='bg-white pt-5' >
 
             {/* header */}
             <View className='flex-row pb-3 items-center mx-4 space-x-2 px-2'>
@@ -93,9 +92,14 @@ export default function Home() {
                         description={category.short_description}
                     />
                 })}
-
             </ScrollView>
-
-        </SafeAreaView>
+        </View>
     )
 }
+
+const styles = StyleSheet.create({
+    container: {
+        marginTop: StatusBar.currentHeight,
+        marginBottom: 110
+    }
+})

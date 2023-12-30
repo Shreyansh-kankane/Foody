@@ -1,12 +1,10 @@
 import { View, Text,TouchableOpacity,Image, ImageComponent } from 'react-native'
-import React from 'react'
+import React,{ useState } from 'react'
 import Currency from 'react-currency-formatter';
 import { urlFor } from '../sanityClient';
-import { useState } from 'react';
 import { MinusCircleIcon, PlusCircleIcon } from 'react-native-heroicons/solid';
 import { useDispatch, useSelector } from 'react-redux';
-import { selectBasketItemsWithId } from '../features/basketSlice';
-import { addToBasket,removeFromBasket } from '../features/basketSlice';
+import { selectBasketItemsWithId,addToBasket,removeFromBasket } from '../features/basketSlice';
 
 export default function DishRow({
     id,
@@ -100,12 +98,9 @@ export default function DishRow({
                                 />
                             </TouchableOpacity>
                     </View>  
-
                 </View>
-
             )
         }
-
     </>
   )
 }
