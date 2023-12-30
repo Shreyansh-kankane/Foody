@@ -1,7 +1,9 @@
 import { View, Text, Image,TextInput ,ScrollView} from 'react-native'
-import React, { useLayoutEffect } from 'react'
+import React, {  useLayoutEffect,useEffect, useState } from 'react'
 import { useNavigation } from '@react-navigation/native'
 import { SafeAreaView } from 'react-native-safe-area-context';
+// import { SafeAreaView } from 'react-native';
+
 import {
     ChevronDownIcon,
     UserIcon,
@@ -9,11 +11,15 @@ import {
     MagnifyingGlassIcon
 } from 'react-native-heroicons/outline'
 
+import client from '../sanityClient';
+
 import Categories from '../components/Categories';
 import FeaturedRow from '../components/FeaturedRow';
 
 export default function Home() {
+    const [featuredCategories,setFeatutedCategories] = useState([]);
     const navigation = useNavigation();
+
 
     useLayoutEffect(() => {
         navigation.setOptions({
@@ -21,8 +27,24 @@ export default function Home() {
         })
     }, []);
 
+    useEffect(()=>{
+        client.fetch(
+            `*[_type == "featured"]{
+                ...,
+                restaurants[]->{
+                    ...,
+                    dishes[]->
+                }
+            }`
+        ).then(
+            (data) =>{
+                setFeatutedCategories(data);
+            }
+        )
+    },[]);
+
     return (
-        <SafeAreaView className='bg-white pt-5' >
+        <SafeAreaView className='bg-white pt-5 mb-[100px]' >
 
             {/* header */}
             <View className='flex-row pb-3 items-center mx-4 space-x-2 px-2'>
@@ -62,19 +84,15 @@ export default function Home() {
                 <Categories />
 
                 {/* featuredRows */}
-            
-                <FeaturedRow 
-                    title={'Featuerd'}
-                    description={'Paid placements from your partners'}
-                />
-                <FeaturedRow 
-                    title={'Tasty Discount'}
-                    description={'Everyone are enjoying these juicy discount'}
-                />
-                <FeaturedRow 
-                    title={'Offers near you'}
-                    description={'Why not support your local restaurants tonight!'}
-                />
+
+                {featuredCategories.map(category=>{
+                    return <FeaturedRow 
+                        key={category._id}
+                        id={category._id}
+                        title={category.name}
+                        description={category.short_description}
+                    />
+                })}
 
             </ScrollView>
 
